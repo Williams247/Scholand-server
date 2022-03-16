@@ -2,7 +2,7 @@
 
 ```bash
 # clone
-git clone git@github.com:Williams247/Auth-system.git
+git@github.com:Williams247/Quiz-Prep.git
 # install dependencies
 $ npm install
 
