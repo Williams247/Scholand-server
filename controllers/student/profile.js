@@ -72,7 +72,11 @@ exports.handleUpdateProfile = async (request, response) => {
     student.accountName  = `${accountName ? accountName : ""}`;
     student.bankName = `${bankName ? bankName : ""}`
     await student.save();
-    response.status(200).json({ message: "Profile updated." });
+    const studentProfile = await Profile("student", request.user.id);
+    response.status(200).json({
+      message: "Profile updated.",
+      result: studentProfile
+   });
 
   } catch (error) {
     console.log(error);

@@ -8,5 +8,6 @@ app.use(require("./auth/signup"));
 app.use(require("./auth/verify-account"));
 app.use(require("./auth/verify-otp"));
 app.use(require("./student/profile"));
+app.use(require("./student/payment"));
 
 module.exports = app;

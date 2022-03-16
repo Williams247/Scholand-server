@@ -27,6 +27,7 @@ const User = new userSchema({
     type: Boolean,
     default: false
   },
+  isActive: Boolean,
   sex: String,
   dob: Date,
   studyLevel: String,
