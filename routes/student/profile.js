@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const auth = require("../../middleware");
+const auth = require("../../middleware/auth");
 
 // Route to get a user profile
 router.get(
