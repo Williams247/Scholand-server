@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require("path");
+const { mailSentMessage } = require("../../constants/index")
 
 module.exports = (mail, otp, username) => {
   const filePath = path.join(__dirname, '..', 'email/mail-template.html');
@@ -35,7 +36,7 @@ module.exports = (mail, otp, username) => {
       if (error) {
         reject(error)
       } else {
-        resolve(`An OTP has been sent to your email, check in a minute time, if you did not get a mail, check your spam or reload your browswer.`)
+        resolve(mailSentMessage)
       }
     });
   });

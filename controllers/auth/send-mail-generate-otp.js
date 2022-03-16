@@ -1,11 +1,12 @@
 // The send mail generate otp is used to create and update otp records and sends a mail afterwards
-const { Student, Otp } = require("../models/index");
-const { sendMail } = require("../utils/index");
-const { random } = require("../helper/index");
+const { Student, Otp } = require("../../models/index");
+const { sendMail } = require("../../utils/index");
+const { random } = require("../../helper/index");
 
-module.exports = async (email, userType) => {
+exports.handleSendMailGenerateOTP = userType => async (request, response) => {
+    const email = request.body.email;
   // Fires off for student
-  if (userType === "user") {
+  if (userType === "student") {
     try {
       const student = await Student.findOne({ email: email });
       if (!student) return response.status(404).json({ error: "Email does not exist." });
@@ -20,7 +21,7 @@ module.exports = async (email, userType) => {
         updateOtp.time = new Date().toLocaleString();
         await updateOtp.save();
         const sendMailResponse = await sendMail(email, randomValue, `${student.firstName} ${student.lastName}`);
-        return sendMailResponse;
+        return response.status(200).json({ message: sendMailResponse });
       }
       // Creates a new OTP record in the OTP collection and sends a mail
       const otp = new Otp({
@@ -34,7 +35,8 @@ module.exports = async (email, userType) => {
       const sendMailResponse = await sendMail(email, randomValue, `${student.firstName} ${student.lastName}`);
       return sendMailResponse;
     } catch (error) {
-      throw error;
+      console.log(error);
+      response.status(500).json({ error: "Failed to send mail." })
     }
   }
   // Fires off for admin
@@ -53,7 +55,7 @@ module.exports = async (email, userType) => {
         updateOtp.time = new Date().toLocaleString();
         await updateOtp.save();
         const sendMailResponse = await sendMail(email, randomValue, `${student.firstName} ${student.lastName}`);
-        return sendMailResponse;
+        return response.status(200).json({ message: sendMailResponse });
       }
       // Creates a new OTP record in the OTP collection and sends a mail
       const otp = new Otp({
@@ -65,9 +67,10 @@ module.exports = async (email, userType) => {
       });
       await otp.save();
       const sendMailResponse = await sendMail(email, randomValue, `${student.firstName} ${student.lastName}`);
-      return sendMailResponse;
+      return response.status(200).json({ message: sendMailResponse });
     } catch (error) {
-      throw error;
+      console.log(error);
+      response.status(500).json({ error: "Failed to send mail." })
     }
   }
 };

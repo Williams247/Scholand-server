@@ -1,10 +1,8 @@
 const bcrypt = require("bcryptjs");
-const { Student, Otp } = require("../../models/index");
-const { SendMailGenerateOTP } = require("../../services/index")
+const { Student } = require("../../models/index");
 const { validateSignUp } = require("../../validations/auth/signup");
-const { Login } = require("../../services/index");
 
-exports.handleSignUp = async (request, response) => {
+exports.handleSignUp = async (request, response, next) => {
   try {
     // Request bodies
     const { body: { firstName, lastName, phoneNumber, email, password } } = request;
@@ -26,18 +24,8 @@ exports.handleSignUp = async (request, response) => {
       phoneNumber: phoneNumber,
       password: hashPassword
     });
-
     await createStudent.save();
-    
-    const sendMailResponse = await SendMailGenerateOTP(email);
-
-    // Logs in a student
-    const loginResponse = await Login(email, password, "student");
-    return response.status(200).json({
-      signedUp: `Registered, ${sendMailResponse}`,
-      loggedIn: loginResponse
-    });
-
+    return next();
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Registration failed." })

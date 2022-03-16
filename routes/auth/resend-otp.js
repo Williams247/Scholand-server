@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const auth = require("../../middleware");
+const auth = require("../../middleware/auth");
 
 // Route to resend otp
 module.exports = router.post(

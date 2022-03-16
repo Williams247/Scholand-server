@@ -1,7 +1,14 @@
 const router = require("express").Router();
 
 // Route to login a user
-module.exports = router.post(
-  "/auth/login",
-  require("../../controllers/auth/login").handleLogin
+router.post(
+  "/auth/student/login",
+  require("../../controllers/auth/login").handleLogin("student")
 );
+
+router.post(
+  "/auth/admin/login",
+  require("../../controllers/auth/login").handleLogin("admin")
+);
+
+module.exports = router;

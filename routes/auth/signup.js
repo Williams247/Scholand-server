@@ -1,7 +1,10 @@
 const router = require("express").Router();
 
 // Route to signup a user
-module.exports = router.post(
-  "/auth/signup",
-  require("../../controllers/auth/signup").handleSignUp
+router.post(
+  "/auth/student/signup",
+  require("../../controllers/auth/signup").handleSignUp,
+  require("../../controllers/auth/login").handleLogin("student", true)
 );
+
+module.exports = router;
