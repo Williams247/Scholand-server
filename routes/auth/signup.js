@@ -3,8 +3,17 @@ const router = require("express").Router();
 // Route to signup a user
 router.post(
   "/auth/student/signup",
-  require("../../controllers/auth/signup").handleSignUp,
-  require("../../controllers/auth/login").handleLogin("student", true)
+  require("../../controllers/auth/signup").handleSignUp({ signUpAs: "student" }),
+  require("../../controllers/auth/send-mail-generate-otp")
+  .handleSendMailGenerateOTP({ sendOtpTo: "student", withLogin: true, mailSubject: "Verify Account." }),
+  require("../../controllers/auth/login").handleLogin({ loginAs: "student", withSignUp: true })
+);
+
+// Route to signup an admin
+router.post(
+  "/auth/admin/signup",
+  require("../../controllers/auth/signup").handleSignUp({ signUpAs: "admin" }),
+  require("../../controllers/auth/login").handleLogin({ loginAs: "admin", withSignUp: true })
 );
 
 module.exports = router;

@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { mailSentMessage } = require("../../constants/index")
 
-module.exports = (mail, otp, username) => {
+module.exports = (mail, otp, username, subject) => {
   const filePath = path.join(__dirname, '..', 'email/mail-template.html');
   const source = fs.readFileSync(filePath, 'utf-8').toString();
   const template = handlebars.compile(source);
@@ -25,9 +25,9 @@ module.exports = (mail, otp, username) => {
   });
 
   const mailOptions = {
-    from: process.env.NODE_MAIL,
+    from: "Scholand",
     to: mail,
-    subject: "Retrieve password",
+    subject: subject,
     html: mailTemplate
   };
 

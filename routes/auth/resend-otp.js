@@ -1,9 +1,15 @@
 const router = require("express").Router();
-const auth = require("../../middleware/auth");
 
-// Route to resend otp
+// Route to resend otp for a student
 module.exports = router.post(
-  "/auth/resend-otp",
-  auth,
-  require("../../controllers/auth/resend-otp").handleResendOTP
+  "/auth/student/resend-otp",
+  require("../../controllers/auth/resend-otp")
+  .handleResendOTP({ resendOtpTo: "student", mailSubject: "Resend OTP" })
+);
+
+// Route to resend otp for an admin
+module.exports = router.post(
+  "/auth/admin/resend-otp",
+  require("../../controllers/auth/resend-otp")
+  .handleResendOTP({ resendOtpTo: "admin", mailSubject: "Resend OTP" })
 );

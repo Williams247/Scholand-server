@@ -1,5 +1,5 @@
 const { Student } = require("../models/index");
-const { Profile } = require("./index");
+const { Profile } = require("./profile");
 
 module.exports = async (studentID, commandStatus) => {
   try {

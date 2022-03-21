@@ -2,7 +2,7 @@
 
 ```bash
 # clone
-git@github.com:Williams247/Quiz-Prep.git
+git@github.com:Williams247/Scholand.git
 # install dependencies
 $ npm install
 
