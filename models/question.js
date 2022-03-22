@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const question = new Schema({
-  creator: { type: Schema.Types.ObjectId, ref: "admin", required: true },
+const Question = new Schema({
+  creator: { type: Schema.Types.ObjectId, ref: "Admin", required: true },
   cutOffMark: Number,
   students: [
     {
       student: {
         type: Schema.Types.ObjectId,
-        ref: "student"
+        ref: "Student"
       },
       score: Number,
     },
@@ -40,4 +40,4 @@ const question = new Schema({
   ],
 });
 
-module.exports = mongoose.model("question", question);
+module.exports = mongoose.model("Question", Question);

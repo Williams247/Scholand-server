@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const otp = new Schema({
+const Otp = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -27,4 +27,4 @@ const otp = new Schema({
   }
 });
 
-module.exports = mongoose.model("otp", otp);
+module.exports = mongoose.model("Otp", Otp);

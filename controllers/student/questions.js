@@ -19,7 +19,7 @@ exports.handleGetQuestions = async (request, response) => {
 // Gets all subjects
 exports.handleGetSubjects = async (request, response) => {
   try {
-    const subjects = await Question.find();
+    const subjects = await Question.find().populate("creator");
     response.status(200).json({
       message: "Success",
       results: subjects,
@@ -35,7 +35,7 @@ exports.handleGetSubjectByID = async (request, response) => {
   try {
     const {params: { subjectId }} = request;
     if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
-    const subject = await Question.findById(subjectId);
+    const subject = await Question.findById(subjectId).populate("creator");
     response.status(200).json({
       message: "Success.",
       results: subject
