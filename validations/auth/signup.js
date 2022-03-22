@@ -9,7 +9,8 @@ exports.validateSignUp = data => {
     .email({ minDomainSegments: 2, tlds: { allow: ['com'] } }),
     phoneNumber: Joi.number(),
     password: Joi.string().required(),
-    confirmPassword: Joi.string().required().valid(Joi.ref('password')).error(new Error('password does not match.'))
+    confirmPassword: Joi.string().required().valid(Joi.ref('password'))
+    .error(new Error('password does not match.'))
   });
   return schema.validate(data)
 };
