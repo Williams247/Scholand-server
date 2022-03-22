@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 // Route to signup a user
 router.post(
-  "/auth/student/signup",
+  "/student/signup",
   require("../../controllers/auth/signup").handleSignUp({ signUpAs: "student" }),
   require("../../controllers/auth/send-mail-generate-otp")
   .handleSendMailGenerateOTP({ sendOtpTo: "student", withLogin: true, mailSubject: "Verify Account." }),
@@ -11,7 +11,7 @@ router.post(
 
 // Route to signup an admin
 router.post(
-  "/auth/admin/signup",
+  "/admin/signup",
   require("../../controllers/auth/signup").handleSignUp({ signUpAs: "admin" }),
   require("../../controllers/auth/login").handleLogin({ loginAs: "admin", withSignUp: true })
 );

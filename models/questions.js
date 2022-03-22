@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const question = new Schema({
   creator: { type: Schema.Types.ObjectId, ref: "admin", required: true },
+  cutOffMark: Number,
   students: [
     {
       student: {
         type: Schema.Types.ObjectId,
-        ref: "student",
-        required: true,
+        ref: "student"
       },
       score: Number,
     },

@@ -1,20 +1,20 @@
 const app = require("express")();
 
 // Student route
-app.use(require("./student/profile"));
-app.use(require("./student/payment"));
-app.use(require("./student/questions"));
+app.use("/student", require("./student/profile"));
+app.use("/student", require("./student/payment"));
+app.use("/student", require("./student/questions"));
 
 // Admin route
-app.use(require("./admin/questions"));
+app.use("/admin", require("./admin/questions"));
 
 // Auth routes for student and admin
-app.use(require("./auth/forgot-password"));
-app.use(require("./auth/login"));
-app.use(require("./auth/resend-otp"));
-app.use(require("./auth/reset-password"));
-app.use(require("./auth/signup"));
-app.use(require("./auth/verify-account"));
-app.use(require("./auth/verify-otp"));
+app.use("/auth", require("./auth/forgot-password"));
+app.use("/auth", require("./auth/login"));
+app.use("/auth", require("./auth/resend-otp"));
+app.use("/auth", require("./auth/reset-password"));
+app.use("/auth", require("./auth/signup"));
+app.use("/auth", require("./auth/verify-account"));
+app.use("/auth", require("./auth/verify-otp"));
 
 module.exports = app;

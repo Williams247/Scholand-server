@@ -4,6 +4,7 @@ exports.validateQuestion = data => {
   const schema = Joi.object({
     title: Joi.string().required().min(2).max(25),
     adminQuestion: Joi.string().required(),
+    cutOffMark: Joi.number().required(),
     options: Joi.object().required().min(4).max(4).keys({
       optionA: Joi.object().keys({
         title: Joi.string().required()

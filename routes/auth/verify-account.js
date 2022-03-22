@@ -3,7 +3,7 @@ const auth = require("../../middleware/auth");
 
 // Route to verify a student account
 module.exports = router.post(
-  "/auth/student/verify-account",
+  "/student/verify-account",
   auth,
   require("../../controllers/auth/verify-account")
   .handleVerifyAccount({ verifyAs: "student" })
@@ -11,7 +11,7 @@ module.exports = router.post(
 
 // Route to verify an admin account
 module.exports = router.post(
-  "/auth/admin/verify-account",
+  "/admin/verify-account",
   auth,
   require("../../controllers/auth/verify-account")
   .handleVerifyAccount({ verifyAs: "admin" })

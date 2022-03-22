@@ -18,10 +18,11 @@ exports.handleGetAllQuestionsAndSubjects = async (request, response) => {
 // Creates a subject and questions.
 exports.handleSetSubjectAndQuestion = async (request, response) => {
    try {
-    const { body: { title, adminQuestion, options }} = request;
+    const { body: { title, adminQuestion, cutOffMark, options }} = request;
 
     const validateSetQuestion = validateQuestion({
       title: title,
+      cutOffMark: cutOffMark,
       adminQuestion: adminQuestion,
       options: options
     });
@@ -36,6 +37,7 @@ exports.handleSetSubjectAndQuestion = async (request, response) => {
       const createQuestion = await Question.findByIdAndUpdate(question._id);
       createQuestion.questionOptions.push({
         question: adminQuestion,
+        cutOffMark: cutOffMark,
         options: options
       });
       const questions = await createQuestion.save();
@@ -47,6 +49,7 @@ exports.handleSetSubjectAndQuestion = async (request, response) => {
     const createQuestion = new Question({
         creator: request.user.id,
         title: adminTitle,
+        cutOffMark: cutOffMark,
         questionOptions: [
           {
             question: adminQuestion,

@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 // Route for forgot password for a student
 router.post(
-  "/auth/student/forgot-password",
+  "/student/forgot-password",
   require("../../controllers/auth/forgot-password").handleForgotPassword,
   require("../../controllers/auth/send-mail-generate-otp")
   .handleSendMailGenerateOTP({ sendOtpTo: "student", withLogin: false, mailSubject: "Forgot Password." })
@@ -10,7 +10,7 @@ router.post(
 
 // Route for forgot password for an admin
 router.post(
-  "/auth/admin/forgot-password",
+  "/admin/forgot-password",
   require("../../controllers/auth/forgot-password").handleForgotPassword,
   require("../../controllers/auth/send-mail-generate-otp")
   .handleSendMailGenerateOTP({ sendOtpTo: "admin", withLogin: false, mailSubject: "Forgot Password." })
