@@ -34,7 +34,7 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
         phoneNumber: student.phoneNumber
       };
       
-      const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+      const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 * 7 });
       return response.status(200).json({
         message: `${withSignUp ? `Registered, ${mailSentMessage}` : 'You are now logged in.' }`,
           result: {
@@ -74,7 +74,7 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
         email: admin.email
       };
       
-      const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 });
+      const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 * 7 });
       return response.status(200).json({
         message: "You are logged in.",
           result: {

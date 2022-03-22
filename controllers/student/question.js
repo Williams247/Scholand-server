@@ -57,7 +57,7 @@ exports.handleSubmitQuestions = async (request, response) => {
     const hasSubmitted = question.students.filter(i => i.student.toString() === request.user.id.toString());
 
     if (hasSubmitted.length > 0) return response.status(409).json({
-      error: "You've answered this question already."
+      error: "You've already do this examination."
     });
 
     const results = {

@@ -1,17 +1,53 @@
 const { Question } = require("../../models/index");
 const { validateQuestion } = require("../../validations/admin/questions");
 
-// Gets all questions and subjects
-exports.handleGetAllQuestionsAndSubjects = async (request, response) => {
+// Gets all questions
+exports.handleGetQuestions = async (request, response) => {
   try {
-    const questions = await Question.find();
+    const {params: { subjectId }} = request;
+    if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
+    const question = await Question.findById(subjectId).select("questionOptions");
     response.status(200).json({
       message: "Success.",
-      results: questions
+      results: question
     })
   } catch (error) {
     console.log(error);
-    response.status(500).json({ error: "Failed to get all questions." })
+    response.status(500).json({ error: "Failed to get question." });
+  }
+};
+
+// Gets all subjects
+exports.handleGetSubjects = async (request, response) => {
+  try {
+    const subjects = await Question.find().populate({
+      path: "creator",
+      select: "-password",
+    });
+    
+    response.status(200).json({
+      message: "Success",
+      results: subjects,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to get all subjects." });
+  }
+};
+
+// Gets a subject by ID
+exports.handleGetSubjectByID = async (request, response) => {
+  try {
+    const {params: { subjectId }} = request;
+    if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
+    const subject = await Question.findById(subjectId).populate("creator");
+    response.status(200).json({
+      message: "Success.",
+      results: subject
+    })
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to get subject." });
   }
 };
 

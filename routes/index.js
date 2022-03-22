@@ -3,10 +3,10 @@ const app = require("express")();
 // Student route
 app.use("/student", require("./student/profile"));
 app.use("/student", require("./student/payment"));
-app.use("/student", require("./student/questions"));
+app.use("/student", require("./student/question"));
 
 // Admin route
-app.use("/admin", require("./admin/questions"));
+app.use("/admin", require("./admin/question"));
 
 // Auth routes for student and admin
 app.use("/auth", require("./auth/forgot-password"));
