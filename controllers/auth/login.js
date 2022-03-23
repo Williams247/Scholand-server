@@ -31,7 +31,8 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
         firstName: student.firstName,
         lastName: student.lastName,
         email: student.email,
-        phoneNumber: student.phoneNumber
+        phoneNumber: student.phoneNumber,
+        role: student.role
       };
       
       const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 * 7 });
@@ -71,7 +72,8 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
         id: admin._id,
         firstName: admin.firstName,
         lastName: admin.lastName,
-        email: admin.email
+        email: admin.email,
+        role: admin.role
       };
       
       const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 * 7 });

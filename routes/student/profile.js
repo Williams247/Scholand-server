@@ -1,17 +1,17 @@
 const router = require("express").Router();
 
-const auth = require("../../middleware/auth");
+const auth = require("../../middleware/auth").AuthStudent;
 
 // Route to get a user profile
 router.get(
-  "/student/profile",
+  "/profile",
   auth,
   require("../../controllers/student/profile").handleGetProfile
 );
 
 // Route to update a user profile
 router.put(
-  "/student/update-profile",
+  "/update-profile",
   auth,
   require("../../controllers/student/profile").handleUpdateProfile
 );

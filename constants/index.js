@@ -1,3 +1,10 @@
 module.exports = {
-  mailSentMessage: "An OTP has been sent to your email, check in a minute time, if you did not get a mail, check your spam or reload your browser."
+  unAuthorized: "Unauthorized.",
+  mailTaken: "Email already taken.",
+  emptyEmail: "Enter your email.",
+  invalidEmail: "Email does not exist.",
+  noQuestion: "No question found.",
+  noSubject: "No subject found.",
+  mailSentMessage: "An OTP has been sent to your email, if you did not get a mail, check your spam or reload your browser.",
+  resendOTPMessage: "We have resent the OTP to your mail, if you did not get a mail, check your spam or reload your browser."
 };

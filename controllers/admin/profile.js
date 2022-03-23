@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { Student } = require("../../models/index")
+const { Admin } = require("../../models/index");
 const { Profile } = require("../../services/index");
 const { validateUpdateProfile } = require("../../validations/admin/update-profile");
 
@@ -43,7 +43,7 @@ exports.handleUpdateProfile = async (request, response) => {
     
     if (password && !confirmPassword) return response.status(400).json({ error: "Passwords does not match" });
 
-    const admin = await admin.findByIdAndUpdate(request.user.id);
+    const admin = await Admin.findByIdAndUpdate(request.user.id);
     let newUserPassword;
     
     // Set password

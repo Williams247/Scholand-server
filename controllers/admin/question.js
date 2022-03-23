@@ -1,5 +1,6 @@
 const { Question } = require("../../models/index");
 const { validateQuestion } = require("../../validations/admin/questions");
+const { noQuestion, noSubject } = require("../../constants/index");
 
 // Gets all questions
 exports.handleGetQuestions = async (request, response) => {
@@ -7,10 +8,13 @@ exports.handleGetQuestions = async (request, response) => {
     const {params: { subjectId }} = request;
     if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
     const question = await Question.findById(subjectId).select("questionOptions");
+    if (!question) return response.status(404).json({ error: noQuestion });
+
     response.status(200).json({
       message: "Success.",
       results: question
-    })
+    });
+
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to get question." });
@@ -29,6 +33,7 @@ exports.handleGetSubjects = async (request, response) => {
       message: "Success",
       results: subjects,
     });
+
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to get all subjects." });
@@ -40,11 +45,19 @@ exports.handleGetSubjectByID = async (request, response) => {
   try {
     const {params: { subjectId }} = request;
     if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
-    const subject = await Question.findById(subjectId).populate("creator");
+
+    const subject = await Question.findById(subjectId).populate({
+      path: "creator",
+      select: "-password"
+    });
+
+    if (!subject) return response.status(404).json({ error: noSubject });
+
     response.status(200).json({
       message: "Success.",
       results: subject
-    })
+    });
+
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to get subject." });
@@ -69,6 +82,7 @@ exports.handleSetSubjectAndQuestion = async (request, response) => {
 
     const adminTitle = title.toUpperCase();
     const question = await Question.findOne({ title: adminTitle });
+
     if (question) {
       const createQuestion = await Question.findByIdAndUpdate(question._id);
       createQuestion.questionOptions.push({
@@ -76,12 +90,14 @@ exports.handleSetSubjectAndQuestion = async (request, response) => {
         cutOffMark: cutOffMark,
         options: options
       });
+
       const questions = await createQuestion.save();
       return response.status(200).json({
         message: "Question added.",
         results: questions
       })
-    }
+    };
+
     const createQuestion = new Question({
         creator: request.user.id,
         title: adminTitle,
@@ -93,11 +109,14 @@ exports.handleSetSubjectAndQuestion = async (request, response) => {
           }
         ]
     });
+
     const questions = await createQuestion.save();
+
     response.status(201).json({
       message: "Question created.",
       results: questions
-    })
+    });
+
    } catch (error) {
       console.log(error);
       response.status(500).json({ error: "Failed to set questions." })
@@ -112,12 +131,16 @@ exports.handleEditSubject = async (request, response) => {
     if (!title) return response.status(400).json({ error: "Provide a title." });
     const updatedTitle = title.toUpperCase();
     const subject = await Question.findByIdAndUpdate(subjectId);
+    if (!subject) return response.status(404).json({ error: noSubject });
     subject.title = updatedTitle;
+
     const updatedSubject = await subject.save();
+
     response.status(200).json({
       message: "Subject edited.",
       results: updatedSubject
     });
+
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to edit subject." });
@@ -131,6 +154,7 @@ exports.handleEditQuestion = async (request, response) => {
     if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
     if (!questionId) return response.status(400).json({ error: "Provide a question ID" });
     const question = await Question.findOne({ _id: subjectId });
+    if (!question) return response.status(404).json({ error: noQuestion });
 
     for (let i = 0; i < question.questionOptions.length; i++) {
       console.log(question.questionOptions[i])
@@ -144,7 +168,7 @@ exports.handleEditQuestion = async (request, response) => {
       response.status(200).json({
       message: "Question updated.",
       results: updatedQuestions
-   })
+   });
 
   } catch (error) {
     console.log(error);
@@ -159,13 +183,16 @@ exports.handleDeleteQuestion = async (request, response) => {
     if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
     if (!questionId) return response.status(400).json({ error: "Provide a question ID" });
     const question = await Question.findOne({ _id: subjectId });
+    if (!question) return response.status(404).json({ error: noQuestion });
     const currentQuestions = question.questionOptions.filter(i => i._id.toString() !== questionId.toString());
     question.questionOptions = currentQuestions;
     const updatedQuestions = await question.save();
+
     response.status(200).json({
       message: "Question deleted.",
       results: updatedQuestions
-    })
+    });
+
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to delete question." });
@@ -178,6 +205,7 @@ exports.handleDeleteAllQuestion = async (request, response) => {
     const {params: { subjectId }} = request;
     if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
     const question = await Question.findOne({ _id: subjectId });
+    if (!question) return response.status(404).json({ error: noQuestion });
     question.questionOptions = [];
     await question.save();
     response.status(200).json({ message: "Questions deleted." })
@@ -190,15 +218,43 @@ exports.handleDeleteAllQuestion = async (request, response) => {
 // Deletes a subject.
 exports.handleDeleteSubject = async (request, response) => {
   const {params: { subjectId }} = request;
-  if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
   try {
-    await Question.findByIdAndDelete(subjectId);
+    if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
+    const deleteQuestion = await Question.findByIdAndDelete(subjectId);
+    if (!deleteQuestion) return response.status(404).json({ error: noSubject })
     response.status(200).json({ message: "Subject deleted." });
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to delete subject." });
   }
 };
+
+// Gets a list of students who has written a subject's quiz
+exports.handleGetStudentExams = async (request, response) => {
+  try {
+    const {params: { subjectId }} = request;
+    if (!subjectId) return response.status(400).json({ error: "Provide a subject ID." });
+
+    const studentExams = await Question.findById({ _id: subjectId }).populate({
+      path: "students",
+      populate: {
+        path: "student",
+        select: "-password"
+      }
+    });
+
+    if (!studentExams) return response.status(404).json({ error: noSubject });
+
+    response.status(200).json({
+      message: "Success.",
+      results: studentExams
+    });
+
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to get student exams" })
+  }
+}
 
 // Deletes all subjects.
 exports.handleDeleteAllSubjects = async (request, response) => {

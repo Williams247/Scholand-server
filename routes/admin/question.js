@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const auth = require("../../middleware/auth");
+const auth = require("../../middleware/auth").AuthAdmin;
 
 // Route to get questions by subject ID
 router.get(
@@ -70,6 +70,13 @@ router.delete(
   "/delete-subject",
   auth,
   require("../../controllers/admin/question").handleDeleteAllSubjects
+);
+
+// Route to check for student who took part in a subject examination
+router.get(
+  "/student-exam/:subjectId",
+  auth,
+  require("../../controllers/admin/question").handleGetStudentExams
 );
 
 module.exports = router;

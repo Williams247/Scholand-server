@@ -19,6 +19,10 @@ const Student = new Schema({
     type: String,
     required: true
   },
+  role: {
+    type: String,
+    required: true
+  },
   phoneNumber: {
     type: Number,
     required: true

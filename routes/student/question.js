@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const auth = require("../../middleware/auth");
+const auth = require("../../middleware/auth").AuthStudent;
 
 // Route to get questions by subject ID
 router.get(
@@ -23,6 +23,7 @@ router.get(
   require("../../controllers/student/question").handleGetSubjectByID
 );
 
+// Route to submit a question
 router.post(
   "/submit-question/:subjectId",
   auth,

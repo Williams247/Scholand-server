@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { Student, Admin } = require("../../models/index");
 const { validateSignUp } = require("../../validations/auth/signup");
+const { mailTaken } = require("../../constants/index");
 
 exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
   if (signUpAs === "student") {
@@ -14,7 +15,8 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
       }
       // Checks for registered students
       const student = await Student.findOne({ email: email });
-      if (student) return response.status(409).json({ message: "Email already taken." });
+      const admin = await Admin.findOne({ email: email });
+      if (student || admin) return response.status(409).json({ error: mailTaken });
       // Hashes a student password
       const hashPassword = await bcrypt.hash(password, 10);
       // Creates a new student
@@ -23,7 +25,8 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
         lastName: lastName,
         email: email,
         phoneNumber: phoneNumber,
-        password: hashPassword
+        password: hashPassword,
+        role: signUpAs
       });
       await createStudent.save();
       return next();
@@ -44,7 +47,7 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
       // Checks for registered students
       const admin = await Admin.findOne({ email: email });
       const student = await Student.findOne({ email: email });
-      if (admin || student) return response.status(409).json({ message: "Email already taken." });
+      if (admin || student) return response.status(409).json({ error: mailTaken });
       // Hashes a student password
       const hashPassword = await bcrypt.hash(password, 10);
       // Creates a new student
@@ -52,7 +55,8 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
         firstName: firstName,
         lastName: lastName,
         email: email,
-        password: hashPassword
+        password: hashPassword,
+        role: signUpAs
       });
       await createAdmin.save();
       return next();
