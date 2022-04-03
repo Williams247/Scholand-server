@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
-const { Admin } = require("../../models/index");
-const { Profile } = require("../../services/index");
+const { Admin } = require("../../models");
+const { Profile } = require("../../services");
 const { validateUpdateProfile } = require("../../validations/admin/update-profile");
 
 exports.handleGetProfile = async (request, response) => {

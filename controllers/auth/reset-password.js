@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { Student, Otp, Admin } = require("../../models/index");
+const { Student, Otp, Admin } = require("../../models");
 const { validateResetPassword } = require("../../validations/auth/reset-password");
 
 exports.handleResetPassword = ({ userType }) => async (request, response) => {

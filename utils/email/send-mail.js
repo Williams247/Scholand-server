@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer");
 const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require("path");
-const { mailSentMessage } = require("../../constants/index")
+const { mailSentMessage } = require("../../constants")
 
 module.exports = (mail, otp, username, subject) => {
   const filePath = path.join(__dirname, '..', 'email/mail-template.html');

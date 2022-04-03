@@ -1,18 +1,25 @@
 const bcrypt = require("bcryptjs");
-const { Student, Admin } = require("../../models/index");
+const { Student, Admin } = require("../../models");
 const { validateSignUp } = require("../../validations/auth/signup");
-const { mailTaken } = require("../../constants/index");
+const { mailTaken } = require("../../constants");
+const { random } = require("../../helper")
 
 exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
   if (signUpAs === "student") {
     try {
       // Request bodies
-      const { body: { firstName, lastName, phoneNumber, email, password } } = request;
+      const { body: { firstName, lastName, phoneNumber, email, password }, query: { refareralCode } } = request;
       // Input validations
       const validateUserSignUp = validateSignUp(request.body);
       if (validateUserSignUp.error) {
         return response.status(400).json({ error: validateUserSignUp.error.message });
       }
+
+      if (refareralCode) {
+        const studentWithReferal = await Student.findOne({ refareralCode: refareralCode });
+        if (!studentWithReferal) return response.status(400).json({ error: "Invalid referal code." });
+      }
+      
       // Checks for registered students
       const student = await Student.findOne({ email: email });
       const admin = await Admin.findOne({ email: email });
@@ -26,13 +33,29 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
         email: email,
         phoneNumber: phoneNumber,
         password: hashPassword,
-        role: signUpAs
+        role: signUpAs,
+        refareralCode: random(9000)
       });
-      await createStudent.save();
+      const newStudent = await createStudent.save();
+      if (refareralCode) {
+        const studentWithReferal2 = await Student.findOne({ refareralCode: refareralCode }).populate("refered");
+        if (studentWithReferal2.refered.length === 20) {
+          if (studentWithReferal2.refered.filter(i => i.verified === true) === 5) {
+            console.log("Do something now.")
+          }
+        }
+        const studentToGetReferal = await Student.findOne({ refareralCode: Number(refareralCode) });
+        console.log("Testing log testing testing works....")
+        console.log(studentToGetReferal)
+        const addReferedStudent = await Student.findByIdAndUpdate(studentToGetReferal._id)
+        addReferedStudent.refered.push(newStudent);
+        await addReferedStudent.save();
+        return next();
+      }
       return next();
     } catch (error) {
       console.log(error);
-      response.status(500).json({ error: "Registration failed." })
+      response.status(500).json({ error: "Registration failed." });
     }
   }
   if (signUpAs === "admin") {
@@ -62,7 +85,7 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
       return next();
     } catch (error) {
       console.log(error);
-      response.status(500).json({ error: "Registration failed." })
+      response.status(500).json({ error: "Registration failed." });
     }
   }
 };

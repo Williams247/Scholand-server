@@ -1,4 +1,4 @@
-const { Otp, Student, Admin } = require("../../models/index");
+const { Otp, Student, Admin } = require("../../models");
 const { calcTimeDifference } = require("../../helper");
 
 exports.handleVerifyAccount = ({ verifyAs }) => async (request, response) => {

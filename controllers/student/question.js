@@ -1,5 +1,5 @@
-const { Question } = require("../../models/index");
-const { noQuestion, noSubject } = require("../../constants/index");
+const { Question } = require("../../models");
+const { noQuestion, noSubject } = require("../../constants");
 
 // Gets all questions
 exports.handleGetQuestions = async (request, response) => {

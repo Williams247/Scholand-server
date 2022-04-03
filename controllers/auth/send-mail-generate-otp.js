@@ -1,7 +1,7 @@
 // The send mail generate otp is used to create and update otp records and sends a mail afterwards
-const { Student, Admin, Otp } = require("../../models/index");
-const { sendMail } = require("../../utils/index");
-const { random } = require("../../helper/index");
+const { Student, Admin, Otp } = require("../../models");
+const { sendMail } = require("../../utils");
+const { random } = require("../../helper");
 
 exports.handleSendMailGenerateOTP = ({ sendOtpTo, withLogin, mailSubject }) => async (request, response, next) => {
     const email = request.body.email;

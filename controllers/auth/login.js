@@ -1,9 +1,9 @@
 // Login controller for student and admin
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const { Student, Admin } = require("../../models/index");
+const { Student, Admin } = require("../../models");
 const { validateLogin } = require("../../validations/auth/login");
-const { mailSentMessage } = require("../../constants/index");
+const { mailSentMessage } = require("../../constants");
 
 exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => {
   const { body: { email, password } } = request;
@@ -32,7 +32,8 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
         lastName: student.lastName,
         email: student.email,
         phoneNumber: student.phoneNumber,
-        role: student.role
+        role: student.role,
+        referalCode: student.refareralCode
       };
       
       const token = await jwt.sign(payload, process.env.SECRET, { expiresIn: 3600 * 24 * 7 });

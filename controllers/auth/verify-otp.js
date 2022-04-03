@@ -1,4 +1,4 @@
-const { Otp } = require("../../models/index");
+const { Otp } = require("../../models");
 const { calcTimeDifference } = require("../../helper");
 
 exports.handleVerifyPassword = async (request, response) => {

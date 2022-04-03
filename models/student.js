@@ -31,17 +31,25 @@ const Student = new Schema({
     type: Boolean,
     default: false
   },
+  password: {
+    type: String,
+    required: true
+  },
+  refered: [{
+    type: Schema.Types.ObjectId,
+    ref: "Student"
+  }],
+  refareralCode: {
+    type: Number,
+    required: true
+  },
   isActive: Boolean,
   sex: String,
   dob: Date,
   studyLevel: String,
   accountNumber: Number,
   accountName: String,
-  bankName: String,
-  password: {
-    type: String,
-    required: true
-  }
+  bankName: String
 });
 
 module.exports = mongoose.model("Student", Student);

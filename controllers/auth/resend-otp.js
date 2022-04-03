@@ -1,6 +1,6 @@
-const { Otp, Student, Admin } = require("../../models/index");
-const { sendMail } = require("../../utils/index");
-const { resendOTPMessage, emptyEmail, invalidEmail } = require("../../constants/index");
+const { Otp, Student, Admin } = require("../../models");
+const { sendMail } = require("../../utils");
+const { resendOTPMessage, emptyEmail, invalidEmail } = require("../../constants");
 
 exports.handleResendOTP = ({ resendOtpTo, mailSubject }) => async (request, response) => {
   if (resendOtpTo === "student") {

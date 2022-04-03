@@ -1,6 +1,6 @@
-const { Question } = require("../../models/index");
+const { Question } = require("../../models");
 const { validateQuestion } = require("../../validations/admin/questions");
-const { noQuestion, noSubject } = require("../../constants/index");
+const { noQuestion, noSubject } = require("../../constants");
 
 // Gets all questions
 exports.handleGetQuestions = async (request, response) => {

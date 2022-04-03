@@ -7,6 +7,7 @@ app.use("/student", require("./student/question"));
 
 // Admin route
 app.use("/admin", require("./admin/question"));
+app.use("/admin", require("./admin/student"));
 
 // Auth routes for student and admin
 app.use("/auth", require("./auth/forgot-password"));
