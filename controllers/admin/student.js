@@ -3,16 +3,45 @@ const { Profile } = require("../../services");
 
 // Route to get students
 exports.handleGetStudents = async (request, response) => {
-  try {
-    const students = await Student.find().select("-password");
-    response.status(200).json({
-      message: "Success.",
-      results: students
-    })
-  } catch (error) {
-      console.log(error);
-      response.status(500).json({ error: "Failed to fetch students." });
-  }
+  const {query: { filterBy }} = request;
+  if (filterBy === "activated") {
+    try { 
+      const students = await Student.find({ activated: true }).select("-password");
+      response.status(200).json({
+        message: "Success.",
+        results: students
+      })
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({ error: "Failed to fetch students." });
+    }
+    return false
+  } 
+
+  if (filterBy === "deactivated") {
+      try { 
+        const students = await Student.find({ activated: false }).select("-password");
+        response.status(200).json({
+          message: "Success.",
+          results: students
+        })
+      } catch (error) {
+          console.log(error);
+          response.status(500).json({ error: "Failed to fetch students." });
+      }
+      return false
+    }
+
+    try { 
+      const students = await Student.find().select("-password");
+      response.status(200).json({
+        message: "Success.",
+        results: students
+      })
+    } catch (error) {
+        console.log(error);
+        response.status(500).json({ error: "Failed to fetch students." });
+    }
 };
 
 // Route to get a student by ID
