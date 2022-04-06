@@ -40,7 +40,7 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
       if (refareralCode) {
         const studentWithReferal2 = await Student.findOne({ refareralCode: refareralCode }).populate("refered");
         if (studentWithReferal2.refered.length === 20) {
-          if (studentWithReferal2.refered.filter(i => i.verified === true) === 5) {
+          if (studentWithReferal2.refered.filter(i => i.verified === true).length === 5) {
             console.log("Do something now.")
           }
         }

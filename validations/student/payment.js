@@ -5,8 +5,7 @@ exports.validatePayment = data => {
     email: Joi.string()
     .required()
     .email({ minDomainSegments: 2, tlds: { allow: ['com'] } }),
-    phoneNumber: Joi.number().required(),
-    amount: Joi.number.required()
+    amount: Joi.number().required()
   });
   return schema.validate(data);
 };
