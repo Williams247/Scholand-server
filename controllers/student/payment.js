@@ -1,6 +1,6 @@
+const { Student } = require("../../models");
 const { makeRequest } = require("../../utils");
-const { validatePayment } = require("../../validations/student/payment");
-const { Student } = require("../../models")
+const { validatePayment, validateTransfer } = require("../../validations/student/payment");
 
 exports.handleInitPayment = async (request, response) => {
   const {body: { email, amount }} = request;
@@ -37,13 +37,37 @@ exports.handleVerifyPayment = async (request, response) => {
       const student = await Student.findByIdAndUpdate(request.user.id);
       student.isActive = true;
       await student.save();
-      response.status(200).json({
-        message: "Congratulations, your account has been activated.",
-        results: data
-      })
+      response.status(200).json({ message: "Congratulations, your account has been activated." });
     }
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to verify payment." });
+  }
+};
+
+// Banks that are supported by paystack API
+exports.handleVerifyAccount = async (request, response) => {
+  try {
+    const verifyAccountRes = await makeRequest.get("/bank?currency=NGN");
+    const { data: { message, data } } = verifyAccountRes;
+    response.status(200).json({
+      message: message,
+      results: data
+    })
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to verify account number." })
+  }
+};
+
+exports.handleCreateTransferReceipt = async (request, response) => {
+  const {body: { type, name, account_number, bank_code, currency }} = request;
+  const validateUserTransfer = validateTransfer
+  try {
+    const createTransactionReceiptRes = await makeRequest.post("/transferrecipient");
+    console.log(createTransactionReceiptRes);
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to create transaction receipt." })
   }
 };
