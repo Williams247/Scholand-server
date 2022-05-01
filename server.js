@@ -25,10 +25,6 @@ app.use((request, response, next) => {
 // Request logs in dev mode
 app.use(morgan("dev"));
 
-app.use((request, response) => {
-  response.status(404).json({ error: "Route not found." })
-});
-
 // Routes
 app.use(require("./routes"));
 
