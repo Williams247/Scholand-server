@@ -34,7 +34,7 @@ const port = process.env.PORT || process.env.LOCALHOST;
 // URI conditions
 let processEnv = process.env.NODE_ENV;
 
-const dbURI = processEnv === "production" ? process.env.REMOTE_MONGODB_URI : process.env.LOCAL_MONGODB_URI
+const dbURI = processEnv === "production" ? process.env.REMOTE_MONGODB_URI : process.env.LOCAL_MONGODB_URI;
 
 app.listen(port, async () => {
   try {
