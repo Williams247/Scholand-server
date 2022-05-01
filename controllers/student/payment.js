@@ -17,7 +17,7 @@ exports.handleInitPayment = async (request, response) => {
     console.log(initPayRes.data)
     response.status(200).json({
       message: "Sucessful",
-      results: initPayRes.data.authorization_url
+      url: initPayRes.data.authorization_url
     });
   } catch (error) {
     console.log(error);
