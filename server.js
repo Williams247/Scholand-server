@@ -25,12 +25,12 @@ app.use((request, response, next) => {
 // Request logs in dev mode
 app.use(morgan("dev"));
 
-// Routes
-app.use(require("./routes"));
-
 app.use((request, response) => {
   response.status(404).json({ error: "Route not found." })
 });
+
+// Routes
+app.use(require("./routes"));
 
 // Ports for server to run
 const port = process.env.PORT || process.env.LOCALHOST;
