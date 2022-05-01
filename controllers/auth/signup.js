@@ -59,6 +59,7 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
         await addReferedStudent.save();
         return next();
       }
+      
       return next();
     } catch (error) {
       console.log(error);
