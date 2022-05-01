@@ -43,6 +43,7 @@ const Student = new Schema({
     type: Number,
     required: true
   },
+  paid: Boolean,
   isActive: Boolean,
   sex: String,
   dob: Date,

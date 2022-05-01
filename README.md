@@ -14,4 +14,4 @@ $ npm start
 ```
 
 ## API POSTMAN DOCS
-https://documenter.getpostman.com/view/13255061/UVsJv6Zh#c42b8d1b-8066-4ad8-aec5-ddc5202207a7
+https://documenter.getpostman.com/view/13255061/UyrGCEMN#intro

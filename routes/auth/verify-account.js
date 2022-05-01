@@ -2,7 +2,7 @@ const router = require("express").Router();
 const auth = require("../../middleware/auth").AuthStudent;
 
 // Route to verify a student account
-module.exports = router.patch(
+module.exports = router.post(
   "/student/verify-account",
   auth,
   require("../../controllers/auth/verify-account")
@@ -10,7 +10,7 @@ module.exports = router.patch(
 );
 
 // Route to verify an admin account
-module.exports = router.patch(
+module.exports = router.post(
   "/admin/verify-account",
   auth,
   require("../../controllers/auth/verify-account")
