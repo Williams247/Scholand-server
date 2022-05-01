@@ -34,20 +34,25 @@ exports.handleSignUp = ({ signUpAs }) => async (request, response, next) => {
         phoneNumber: phoneNumber,
         password: hashPassword,
         role: signUpAs,
+        paid: false,
         refareralCode: random(9000)
       });
+
       const newStudent = await createStudent.save();
       if (refareralCode) {
         const studentWithReferal2 = await Student.findOne({ refareralCode: refareralCode }).populate("refered");
-        if (studentWithReferal2.refered.length === 20) {
-          if (studentWithReferal2.refered.filter(i => i.verified === true).length === 5) {
-            const findStudent = await Student.findOne({ refareralCode: refareralCode });
-            if (findStudent.paid === false) {
-              findStudent.paid = true;
-              await findStudent.save()
+        
+        if (studentWithReferal2.refered.length > 20) {
+          if (studentWithReferal2.refered.filter(i => i.verified === true).length > 5) {
+            const checkIfPaid = await Student.findOne({ refareralCode: refareralCode });
+            if (checkIfPaid.paid === false) {
+              const payStudent = await Student.findByIdAndUpdate(checkIfPaid._id);
+              payStudent.paid = true;
+              await payStudent.save();
             }
           }
         }
+
         const studentToGetReferal = await Student.findOne({ refareralCode: Number(refareralCode) });
         const addReferedStudent = await Student.findByIdAndUpdate(studentToGetReferal._id)
         addReferedStudent.refered.push(newStudent)

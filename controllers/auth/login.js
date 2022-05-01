@@ -40,7 +40,7 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
       return response.status(200).json({
         message: `${withSignUp ? `Registered, ${mailSentMessage}` : 'You are now logged in.' }`,
           result: {
-            token: token,
+            token: `Bearer ${token}`,
             data: payload
           }
         })
@@ -81,7 +81,7 @@ exports.handleLogin = ({ loginAs, withSignUp }) => async (request, response) => 
       return response.status(200).json({
         message: "You are logged in.",
           result: {
-            token: token,
+            token: `Bearer ${token}`,
             data: payload
           }
         })

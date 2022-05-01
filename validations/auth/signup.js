@@ -7,7 +7,7 @@ exports.validateSignUp = data => {
     email: Joi.string()
     .required()
     .email({ minDomainSegments: 2, tlds: { allow: ['com'] } }),
-    phoneNumber: Joi.number(),
+    phoneNumber: Joi.string(),
     password: Joi.string().required(),
     confirmPassword: Joi.string().required().valid(Joi.ref('password'))
     .error(new Error('password does not match.'))
