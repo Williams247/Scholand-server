@@ -20,10 +20,10 @@ router.get(
   require("../../controllers/student/payment").handleVerifyAccount
 );  
 
-router.post(
-  "/create-receipt",
-  auth,
-  require("../../controllers/student/payment").handleCreateTransferReceipt
-);  
+// router.post(
+//   "/create-receipt",
+//   auth,
+//   require("../../controllers/student/payment").handleCreateTransferReceipt
+// );  
 
 module.exports = router;
