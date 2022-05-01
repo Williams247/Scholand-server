@@ -28,6 +28,10 @@ app.use(morgan("dev"));
 // Routes
 app.use(require("./routes"));
 
+app.use((request, response) => {
+  response.status(404).json({ error: "Page not found" })
+});
+
 // Ports for server to run
 const port = process.env.PORT || process.env.LOCALHOST;
 
