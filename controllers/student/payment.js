@@ -5,7 +5,8 @@ const { validatePayment, validateTransfer } = require("../../validations/student
 
 exports.handleInitPayment = async (request, response) => {
   const student = await Student.findById(request.user.id);
-  const validateUserPayment = validatePayment(request.body);
+  const amount = request.body.amount;
+  const validateUserPayment = validatePayment({ amount: amount });
   if (validateUserPayment.error) return response.status(400).json({ error: validateUserPayment.error.message });
   const options = {
     firstName: student.firstName,
@@ -39,6 +40,7 @@ exports.handleVerifyPayment = (request, response) => {
     const res = request.body
     console.log('Webhook was called by PAYSTACK, Log are below!')
     console.log(res)
+    response.status(200).json({ message: "Paid" })
   }
 };
 
