@@ -26,6 +26,7 @@ exports.handleInitPayment = async (request, response) => {
 };
 
 exports.handleVerifyPayment = (request, response) => {
+    console.log('STARTING ======= Webhook was called by PAYSTACK, Log are below!')
     const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
     if (hash == request.headers['x-paystack-signature']) {
     // Retrieve the request's body
