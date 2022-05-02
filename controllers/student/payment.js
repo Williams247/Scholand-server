@@ -1,10 +1,10 @@
 const crypto = require("crypto");
-const { Student } = require("../../models");
+const Profile = require("../../services/profile");
 const { makeRequest } = require("../../utils");
 const { validatePayment, validateTransfer } = require("../../validations/student/payment");
 
 exports.handleInitPayment = async (request, response) => {
-  const student = await Student.findById(request.user.id);
+  const student = await Profile("student", request.user.id);
   const amount = request.body.amount;
   const validateUserPayment = validatePayment({ amount: amount });
   if (validateUserPayment.error) return response.status(400).json({ error: validateUserPayment.error.message });
