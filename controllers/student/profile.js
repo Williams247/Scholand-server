@@ -47,6 +47,11 @@ exports.handleUpdateProfile = async (request, response) => {
       error: validateUserUpdateProfile.error.message
     });
     
+    if (email) {
+      const doesMailExist = await Student.findOne({ email: email });
+      if (doesMailExist) return response.status(409).json({ error: "Email taken, try another." })
+    }
+    
     if (password && !confirmPassword) return response.status(400).json({ error: "Passwords does not match" });
 
     const student = await Student.findByIdAndUpdate(request.user.id);

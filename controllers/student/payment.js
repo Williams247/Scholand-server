@@ -14,10 +14,10 @@ exports.handleInitPayment = async (request, response) => {
   };
   try {
     const initPayRes = await makeRequest.post("/transaction/initialize", options);
-    console.log(initPayRes.data)
+    const { data: { data: { authorization_url }}} = initPayRes;
     response.status(200).json({
       message: "Sucessful",
-      url: initPayRes.data.authorization_url
+      payStackUrl: authorization_url
     });
   } catch (error) {
     console.log(error);
