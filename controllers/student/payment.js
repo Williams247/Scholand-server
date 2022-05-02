@@ -4,11 +4,17 @@ const { makeRequest } = require("../../utils");
 const { validatePayment, validateTransfer } = require("../../validations/student/payment");
 
 exports.handleInitPayment = async (request, response) => {
-  const {body: { email, amount }} = request;
+  const student = await Student.findById(request.user.id);
   const validateUserPayment = validatePayment(request.body);
   if (validateUserPayment.error) return response.status(400).json({ error: validateUserPayment.error.message });
   const options = {
-    email: email,
+    firstName: student.firstName,
+    lastName: student.lastName,
+    email: student.email,
+    phoneNumber: student.phoneNumber,
+    metadata: {
+      paymentDescription: "To buy past question."
+    },
     amount: amount * 100,
     currency: "NGN"
   };
