@@ -1,21 +1,20 @@
 const crypto = require("crypto");
-const Profile = require("../../services/profile");
+const Student = require("../../models/student");
 const { makeRequest } = require("../../utils");
 const { validatePayment, validateTransfer } = require("../../validations/student/payment");
 
 exports.handleInitPayment = async (request, response) => {
-  const student = await Profile("student", request.user.id);
-  const amount = request.body.amount;
-  const validateUserPayment = validatePayment({ amount: amount });
+  const { body: { email, amount } } = request;
+  const student = await Student.findOne({ email: email });
+  if (!student) return response.status(404).json({ error: "Can not find email, try another." });
+  const validateUserPayment = validatePayment({ email: email, amount: amount });
   if (validateUserPayment.error) return response.status(400).json({ error: validateUserPayment.error.message });
   const options = {
     firstName: student.firstName,
     lastName: student.lastName,
     email: student.email,
     phoneNumber: student.phoneNumber,
-    metadata: {
-      paymentDescription: "To buy past question."
-    },
+    metadata: { paymentDescription: "To buy past question." },
     amount: amount * 100,
     currency: "NGN"
   };
@@ -33,14 +32,12 @@ exports.handleInitPayment = async (request, response) => {
 };
 
 exports.handleVerifyPayment = (request, response) => {
-    console.log('STARTING ======= Webhook was called by PAYSTACK, Log are below!')
     const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
     if (hash == request.headers['x-paystack-signature']) {
     // Retrieve the request's body
     const res = request.body
-    console.log('Webhook was called by PAYSTACK, Log are below!')
+    console.log('Transaction run down are below.')
     console.log(res)
-    response.status(200).json({ message: "Paid" })
   }
 };
 
