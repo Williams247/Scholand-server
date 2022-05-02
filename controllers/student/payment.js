@@ -6,6 +6,7 @@ const { validatePayment, validateTransfer } = require("../../validations/student
 exports.handleInitPayment = async (request, response) => {
   const { body: { email, amount } } = request;
   const student = await Student.findOne({ email: email });
+  if (student.active === true) return response.status(409).json({ error: "Your account is already active." });
   if (!student) return response.status(404).json({ error: "Can not find email, try another." });
   const validateUserPayment = validatePayment({ email: email, amount: amount });
   if (validateUserPayment.error) return response.status(400).json({ error: validateUserPayment.error.message });
@@ -37,7 +38,11 @@ exports.handleVerifyPayment = (request, response) => {
     // Retrieve the request's body
     const res = request.body
     console.log('Transaction run down are below.')
-    console.log(res)
+    console.log(res.data)
+    return false
+    // if (res.event === 'charge.success' && res.data.status === 'success') {
+    //   Student.findOne({ email: res.data })
+    // }
   }
 };
 
