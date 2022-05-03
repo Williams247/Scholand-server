@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const morgan = require("morgan");
+// const morgan = require("morgan");
 require("dotenv").config();
 
 // Express app instance
@@ -23,7 +23,7 @@ app.use((request, response, next) => {
 });
 
 // Request logs in dev mode
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 // Routes
 app.use(require("./routes"));
