@@ -40,7 +40,7 @@ app.listen(port, async () => {
   try {
     await mongoose.connect(dbURI);
     if (processEnv === "production") {
-      console.log("App Started")
+      console.log("App Started");
     } else {
       console.log(`App started visit: http://localhost:${port}/`);
     }
