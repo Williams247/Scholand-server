@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const { Reference, Student } = require("../../models");
 const { Profile, SetStatus } = require("../../services");
 const { makeRequest } = require("../../utils");
-const { validatePayment, validateTransfer } = require("../../validations/student/payment");
+const { validatePayment } = require("../../validations/student/payment");
 
 exports.handleInitPayment = async (request, response) => {
   const student = await Profile("student", request.user.id);
@@ -56,42 +56,18 @@ exports.handleVerifyPayment = async (request, response) => {
     // Retrieve the request's body
     const paystackResponse = request.body;
     const studentUniqueID =  paystackResponse.data.metadata.studentID;
-    const findRef = await Reference.findOne({ user: studentUniqueID });
-    if (!findRef) return response.sendStatus(404);
-
-    console.log(`Transaction made as at ${new Date()}`);
+    // const findRef = await Reference.findOne({ user: studentUniqueID });
+    // if (!findRef) return response.sendStatus(404);
   
     if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
       await SetStatus(studentUniqueID, "activate");
       await Reference.findOneAndDelete({ user: studentUniqueID });
+      // Send 200 response back to paystack to tell them that payment was successful
       response.sendStatus(200);
+      console.log(`Transaction made as at ${new Date()}`);
     }
-    // Send 200 response back to paystack to tell them that payment was successful
-    // Calls the next middleware function
-    // return next()
   }
 };
-
-// exports.handleVerifyPayment = async (request, response) => {
-//   try {
-//     const {query: { reference }} = request;
-//     if (!reference) return response.status(400).json({ error: "Add your reference" });
-//     const verifyPaymentRes = await makeRequest.get(`/transaction/verify/${reference}`);
-//     const { data } = verifyPaymentRes;
-//     if (data.data.status !== "success" && reference !== data.data.reference) {
-//       return response.status(422).json({ error: "Paymanent failed." })
-//     }
-//     if (data.data.status === "success" && reference === data.data.reference) {
-//       const student = await Student.findByIdAndUpdate(request.user.id);
-//       student.isActive = true;
-//       await student.save();
-//       response.status(200).json({ message: "Congratulations, your account has been activated." });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     response.status(500).json({ error: "Failed to verify payment." });
-//   }
-// };
 
 // Banks that are supported by paystack API
 exports.handleVerifyAccount = async (request, response) => {
