@@ -8,7 +8,7 @@ router.post(
   require("../../controllers/student/payment").handleInitPayment
 );
 
-router.get("/verify-student-payment", require("../../controllers/student/payment").handleVerifyPayment);
+router.post("/verify-student-payment", require("../../controllers/student/payment").handleVerifyPayment);
 
 router.get(
   "/bank-list",
