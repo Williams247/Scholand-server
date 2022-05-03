@@ -64,7 +64,6 @@ exports.handleVerifyPayment = async (request, response) => {
       console.log(`Transaction made as at ${new Date()}`);
       await SetStatus(studentUniqueID, "activate");
       await Reference.findOneAndDelete({ user: studentUniqueID });
-      // Send 200 response back to paystack to tell them that payment was successful
     }
   }
 };
