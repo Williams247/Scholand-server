@@ -33,14 +33,13 @@ exports.handleInitPayment = async (request, response) => {
 };
 
 exports.handleVerifyPayment = (request, response) => {
-  console.log("DONE DEAL")
-    // const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
-  //   if (hash == request.headers['x-paystack-signature']) {
-  //   // Retrieve the request's body
-  //   const res = request.body
-  //   console.log('Transaction run down are below.')
-  //   console.log(res)
-  // }
+  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
+    if (hash === request.headers['x-paystack-signature']) {
+    // Retrieve the request's body
+    const res = request.body
+    console.log('Transaction run down are below.')
+    console.log(res)
+  }
 };
 
 // exports.handleVerifyPayment = async (request, response) => {
