@@ -60,7 +60,7 @@ exports.handleVerifyPayment = async (request, response) => {
     if (!findRef) return
   
     if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
-      response.sendStatus(200);
+      response.status(200);
       console.log(`Transaction made as at ${new Date()}`);
       await SetStatus(studentUniqueID, "activate");
       await Reference.findOneAndDelete({ user: studentUniqueID });
