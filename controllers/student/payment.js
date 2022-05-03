@@ -55,7 +55,7 @@ exports.handleVerifyPayment = async (request, response, next) => {
     if (hash === request.headers['x-paystack-signature']) {
     // Retrieve the request's body
     const paystackResponse = request.body;
-    const findRef = await Reference.findOne({ user: request.user.id });
+    const findRef = await Reference.findOne({ user: paystackResponse.data.metadata.studentID });
     if (!findRef) return response.send(404);
 
     console.log(`Transaction made as at ${new Date()}`);
