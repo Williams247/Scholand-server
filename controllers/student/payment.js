@@ -61,7 +61,7 @@ exports.handleVerifyPayment = async (request, response, next) => {
     console.log(`Transaction made as at ${new Date()}`);
     console.log(paystackResponse.data.metadata);
   
-    if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success") {
+    if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
       await SetStatus(paystackResponse.data.metadata.studentID, "activate");
       // Send 200 response back to paystack to tell them that payment was successful
       response.send(200);
