@@ -57,20 +57,19 @@ exports.handleVerifyPayment = async (request, response) => {
     const paystackResponse = request.body;
     const studentUniqueID =  paystackResponse.data.metadata.studentID;
     const findRef = await Reference.findOne({ user: studentUniqueID });
-    if (!findRef) return response.send(404);
+    if (!findRef) return response.sendStatus(404);
 
     console.log(`Transaction made as at ${new Date()}`);
-    console.log(paystackResponse.data.metadata);
   
     if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
       await SetStatus(studentUniqueID, "activate");
       await Reference.findOneAndDelete({ user: studentUniqueID });
+      response.sendStatus(200);
     }
     // Send 200 response back to paystack to tell them that payment was successful
     // Calls the next middleware function
     // return next()
   }
-  response.sendStatus(200);
 };
 
 // exports.handleVerifyPayment = async (request, response) => {
