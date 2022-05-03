@@ -50,25 +50,27 @@ exports.handleInitPayment = async (request, response) => {
   }
 };
 
-exports.handleVerifyPayment = async (request, response, next) => {
+exports.handleVerifyPayment = async (request, response) => {
   const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
     if (hash === request.headers['x-paystack-signature']) {
     // Retrieve the request's body
     const paystackResponse = request.body;
-    const findRef = await Reference.findOne({ user: paystackResponse.data.metadata.studentID });
+    const studentUniqueID =  paystackResponse.data.metadata.studentID;
+    const findRef = await Reference.findOne({ user: studentUniqueID });
     if (!findRef) return response.send(404);
 
     console.log(`Transaction made as at ${new Date()}`);
     console.log(paystackResponse.data.metadata);
   
     if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
-      await SetStatus(paystackResponse.data.metadata.studentID, "activate");
-      // Send 200 response back to paystack to tell them that payment was successful
-      response.sendStatus(200);
-      // Calls the next middleware function
-      return next()
+      await SetStatus(studentUniqueID, "activate");
+      await Reference.findOneAndDelete({ user: studentUniqueID });
     }
+    // Send 200 response back to paystack to tell them that payment was successful
+    // Calls the next middleware function
+    // return next()
   }
+  response.sendStatus(200);
 };
 
 // exports.handleVerifyPayment = async (request, response) => {
