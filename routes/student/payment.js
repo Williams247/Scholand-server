@@ -8,18 +8,22 @@ router.post(
   require("../../controllers/student/payment").handleInitPayment
 );
 
-router.post("/verify-student-payment", require("../../controllers/student/payment").handleVerifyPayment);
+router.post(
+  "/verify-student-payment",
+  require("../../controllers/student/payment").handleVerifyPayment,
+  require("../../controllers/redirect").handleRedirect({ withMessage: true, responseMessage: "Account Activated" })
+);
 
 router.get(
   "/bank-list",
   auth,
   require("../../controllers/student/payment").handleVerifyAccount
-);  
+);
 
 // router.post(
 //   "/create-receipt",
 //   auth,
 //   require("../../controllers/student/payment").handleCreateTransferReceipt
-// );  
+// );
 
 module.exports = router;

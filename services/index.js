@@ -1,7 +1,7 @@
 const Profile = require("./profile");
-const ActivateStudent = require("./activate-student");
+const SetStatus = require("./set-status");
 
 module.exports = {
   Profile,
-  ActivateStudent
+  SetStatus
 };

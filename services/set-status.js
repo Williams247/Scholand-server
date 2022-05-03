@@ -4,9 +4,9 @@ const { Profile } = require("./profile");
 module.exports = async (studentID, commandStatus) => {
   if (commandStatus === "activate") {
     try {
-      const activateStudent = await Student.findByIdAndUpdate(studentID);
-      activateStudent.isActive = true;
-      await activateStudent.save();
+      const setStudentStatus = await Student.findByIdAndUpdate(studentID);
+      setStudentStatus.isActive = true;
+      await setStudentStatus.save();
       return await Profile("student", studentID);
     } catch (error) {
       throw error;
@@ -15,9 +15,9 @@ module.exports = async (studentID, commandStatus) => {
 
   if (commandStatus === "deactivate") {
     try {
-      const activateStudent = await Student.findByIdAndUpdate(studentID);
-      activateStudent.isActive = false;
-      await activateStudent.save();
+      const setStudentStatus = await Student.findByIdAndUpdate(studentID);
+      setStudentStatus.isActive = false;
+      await setStudentStatus.save();
       return await Profile("student", studentID);
     } catch (error) {
       throw error;

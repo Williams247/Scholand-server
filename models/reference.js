@@ -10,10 +10,6 @@ const referenceModel = new Schema({
   paymentReference: {
     type: String,
     required: true,
-  },
-  refareralCode: {
-    type: Number,
-    required: true
   }
 });
 

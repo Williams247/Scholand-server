@@ -1,5 +1,6 @@
 const crypto = require("crypto");
-const Profile = require("../../services/profile");
+const { Reference, Student } = require("../../models");
+const { Profile, SetStatus } = require("../../services");
 const { makeRequest } = require("../../utils");
 const { validatePayment, validateTransfer } = require("../../validations/student/payment");
 
@@ -21,25 +22,55 @@ exports.handleInitPayment = async (request, response) => {
   };
   try {
     const initPayRes = await makeRequest.post("/transaction/initialize", options);
-    const { data: { data: { authorization_url }}} = initPayRes;
+    const { data: { data: { authorization_url, reference }}} = initPayRes;
+
+    const findRef = await Reference.findOne({ user: request.user.id });
+    if (!findRef) {
+      const createRef = new Reference({
+        user: request.user.id,
+        paymentReference: reference
+      });
+
+      await createRef.save();
+      return response.status(200).json({
+        message: "Sucessful",
+        payStackUrl: authorization_url
+      });
+    }
+
+    const modifyRef = await Reference.findByIdAndUpdate(findRef._id);
+    modifyRef.reference = reference;
+    await modifyRef.save();
     response.status(200).json({
       message: "Sucessful",
       payStackUrl: authorization_url
     });
+
   } catch (error) {
     console.log(error);
     response.status(500).json({ error: "Failed to initialize payment." });
   }
 };
 
-exports.handleVerifyPayment = (request, response) => {
+exports.handleVerifyPayment = async (request, response, next) => {
   const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
     if (hash === request.headers['x-paystack-signature']) {
     // Retrieve the request's body
-    const res = request.body
-    console.log('Transaction run down are below.')
-    console.log(res)
+    const paystackResponse = request.body;
+    const findRef = await Reference.findOne({ user: request.user.id });
+    if (!findRef) return response.send(404);
+
+    console.log(`Transaction made as at ${new Date().toLocaleDateString()}`);
+    console.log(paystackResponse.data.metadata);
+  
+    if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.metadata.reference === findRef.paymentReference) {
+      await SetStatus(request.user.id, "activate");
+    }
   }
+  // Send 200 response back to paystack to tell them that payment was successful
+  response.send(200);
+  // Calls the next middleware function
+  next()
 };
 
 // exports.handleVerifyPayment = async (request, response) => {
