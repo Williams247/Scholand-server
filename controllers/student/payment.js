@@ -14,9 +14,7 @@ exports.handleInitPayment = async (request, response) => {
     lastName: student.lastName,
     email: student.email,
     phoneNumber: student.phoneNumber,
-    metadata: {
-      referalCode: student.referalCode
-    },
+    metadata: { studentID: request.user.id },
     amount: amount * 100,
     currency: "NGN"
   };
@@ -63,8 +61,8 @@ exports.handleVerifyPayment = async (request, response, next) => {
     console.log(`Transaction made as at ${new Date()}`);
     console.log(paystackResponse.data.metadata);
   
-    if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.metadata.reference === findRef.paymentReference) {
-      await SetStatus(request.user.id, "activate");
+    if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success") {
+      await SetStatus(paystackResponse.data.metadata.studentID, "activate");
       // Send 200 response back to paystack to tell them that payment was successful
       response.send(200);
       // Calls the next middleware function
