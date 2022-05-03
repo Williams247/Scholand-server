@@ -50,11 +50,11 @@ exports.handleInitPayment = async (request, response) => {
   }
 };
 
-exports.handleVerifyPayment = async (request, response) => {
-  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
-    if (hash === request.headers['x-paystack-signature']) {
-    // Retrieve the request's body
-    const paystackResponse = request.body;
+exports.handleVerifyPayment = async (req, res) => {
+  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
+    if (hash === req.headers['x-paystack-signature']) {
+    // Retrieve the req's body
+    const paystackResponse = req.body;
     const studentUniqueID =  paystackResponse.data.metadata.studentID;
     const findRef = await Reference.findOne({ user: studentUniqueID });
     // if (!findRef) return response.sendStatus(404);
@@ -62,11 +62,10 @@ exports.handleVerifyPayment = async (request, response) => {
     if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
       await SetStatus(studentUniqueID, "activate");
       await Reference.findOneAndDelete({ user: studentUniqueID });
-      // Send 200 response back to paystack to tell them that payment was successful
-      response.sendStatus(200);
       console.log(`Transaction made as at ${new Date()}`);
     }
   }
+  res.send(200);
 };
 
 // Banks that are supported by paystack API
