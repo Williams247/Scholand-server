@@ -1,4 +1,4 @@
-const { Student, Admin } = require("../models/index");
+const { Student, Admin } = require("../models");
 
 module.exports = async (userType, id, removeProp) => {
   try {
