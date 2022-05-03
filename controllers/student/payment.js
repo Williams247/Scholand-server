@@ -57,7 +57,7 @@ exports.handleVerifyPayment = async (request, response) => {
     const paystackResponse = request.body;
     const studentUniqueID =  paystackResponse.data.metadata.studentID;
     const findRef = await Reference.findOne({ user: studentUniqueID });
-    if (!findRef) return response.sendStatus(404);
+    if (!findRef) return
   
     if (paystackResponse.event === "charge.success" && paystackResponse.data.status === "success" && paystackResponse.data.reference === findRef.paymentReference) {
       response.sendStatus(200);
