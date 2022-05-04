@@ -52,9 +52,10 @@ exports.handleInitPayment = async (request, response) => {
 
 exports.handleVerifyPayment = async (request, response) => {
   const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
-    if (hash === request.headers['x-paystack-signature']) {
-    response.sendStatus(200);
+   const hashCheck = hash === request.headers['x-paystack-signature'];
+   if (!hashCheck) return response.sendStatus(400);
     // Retrieve the request's body
+    response.sendStatus(200);
     const paystackResponse = request.body;
     const studentUniqueID =  paystackResponse.data.metadata.studentID;
     const findRef = await Reference.findOne({ user: studentUniqueID });
@@ -63,7 +64,6 @@ exports.handleVerifyPayment = async (request, response) => {
       console.log(`Transaction made as at ${new Date()}`);
       await SetStatus(studentUniqueID, "activate");
       await Reference.findOneAndDelete({ user: studentUniqueID });
-    }
   }
 };
 
