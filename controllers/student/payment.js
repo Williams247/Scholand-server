@@ -51,7 +51,7 @@ exports.handleInitPayment = async (request, response) => {
 };
 
 exports.handleVerifyPayment = async (request, response) => {
-  const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
+  let hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
    const hashCheck = hash === request.headers['x-paystack-signature'];
    if (!hashCheck) return response.sendStatus(400);
     // Retrieve the request's body
