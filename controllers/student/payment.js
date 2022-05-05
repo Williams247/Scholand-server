@@ -54,7 +54,7 @@ exports.handleVerifyPayment = async (request, response) => {
   let hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY).update(JSON.stringify(request.body)).digest('hex');
    const hashCheck = hash === request.headers['x-paystack-signature'];
    if (!hashCheck) return response.sendStatus(400);
-    // Retrieve the request's body
+    // Retrieve the request body
     response.sendStatus(200);
     const paystackResponse = request.body;
     const studentUniqueID =  paystackResponse.data.metadata.studentID;
