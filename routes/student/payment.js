@@ -9,7 +9,7 @@ router.post(
 );
 
 router.post(
-  "/payment-transaction-verification",
+  "/verify-student-payment",
   require("../../controllers/student/payment").handleVerifyPayment
   // require("../../controllers/redirect").handleRedirect({ withMessage: true, responseMessage: "Account Activated" })
 );
