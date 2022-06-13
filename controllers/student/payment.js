@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const { Reference, Student } = require("../../models");
 const { Profile, SetStatus } = require("../../services");
 const { makeRequest } = require("../../utils");
-const { validatePayment } = require("../../validations/student/payment");
+const { validatePayment, validateResolve, validateTransfer } = require("../../validations/student/payment");
 
 exports.handleInitPayment = async (request, response) => {
   const student = await Profile("student", request.user.id);
@@ -69,10 +69,10 @@ exports.handleVerifyPayment = async (request, response) => {
 };
 
 // Banks that are supported by paystack API
-exports.handleVerifyAccount = async (request, response) => {
+exports.handleGetBankList = async (request, response) => {
   try {
-    const verifyAccountRes = await makeRequest.get("/bank?currency=NGN");
-    const { data: { message, data } } = verifyAccountRes;
+    const bankList = await makeRequest.get("/bank?currency=NGN");
+    const { data: { message, data } } = bankList;
     response.status(200).json({
       message: message,
       results: data
@@ -82,6 +82,50 @@ exports.handleVerifyAccount = async (request, response) => {
     response.status(500).json({ error: "Failed to verify account number." })
   }
 };
+
+exports.handleResolveBankAccount = async (request, response) => {
+  try {
+    const {body: { accountNumber, bankCode }} = request;
+    const validateUserResolveAccount = validateResolve({
+      accountNumber: accountNumber,
+      bankCode: bankCode
+    });
+    if (validateUserResolveAccount.error) return response.status(400).json({ error: validateUserResolveAccount.error.message });
+    const resolvedAccount = await makeRequest.get(`/bank/resolve?account_number=${accountNumber}&bank_code=${bankCode}`);
+    const { data: { message, data }} = resolvedAccount;
+    response.status(200).json({
+      message: message,
+      results: data
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to resolve." })
+  }
+};
+
+exports.handleTransfer = async (request, response) => {
+  try {
+    const {body: { accountName, accountNumber, bankCode }} = request;
+    const validateUserTransferDetails = validateTransfer({
+      accountName: accountName,
+      accountNumber: accountNumber,
+      bankCode: bankCode
+    });
+    if (validateUserTransferDetails.error) return response.status(400).json({ error: validateUserTransferDetails.error.message });
+    const createRecipient = await makeRequest.post("/transferrecipient", {
+      type: "nuban",
+      name: accountName,
+      account_number: accountNumber,
+      bank_code: bankCode,
+      currency: "NGN"
+    });
+    console.log(createRecipient)
+    // Initial the transfer here
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ error: "Failed to transfer." })
+  }
+}
 
 // exports.handleCreateTransferReceipt = async (request, response) => {
 //   const {body: { type, name, account_number, bank_code, currency }} = request;

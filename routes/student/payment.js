@@ -11,19 +11,24 @@ router.post(
 router.post(
   "/confirm-student-payment",
   require("../../controllers/student/payment").handleVerifyPayment
-  // require("../../controllers/redirect").handleRedirect({ withMessage: true, responseMessage: "Account Activated" })
 );
 
 router.get(
   "/bank-list",
   auth,
-  require("../../controllers/student/payment").handleVerifyAccount
+  require("../../controllers/student/payment").handleGetBankList
 );
 
-// router.post(
-//   "/create-receipt",
-//   auth,
-//   require("../../controllers/student/payment").handleCreateTransferReceipt
-// );
+router.post(
+  "/resolve-account",
+  auth,
+  require("../../controllers/student/payment").handleResolveBankAccount
+);
+
+router.post(
+  "/transfer",
+  auth,
+  require("../../controllers/student/payment").handleTransfer
+);
 
 module.exports = router;
